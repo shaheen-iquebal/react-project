@@ -3,6 +3,10 @@ import { IconContext } from "react-icons";
 // import { TbPasswordFingerprint } from "react-icons/tb";
 import { MdOutlinePassword } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { FaRegCopy, FaHome } from "react-icons/fa";
+import { FiRefreshCcw } from "react-icons/fi";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function PasswordGenerator() {
 
@@ -69,7 +73,42 @@ export default function PasswordGenerator() {
     const handleSpecialCheck = (e) => {
         setIsSpecialChecked(e.target.checked)
     }
+    const handleCopy = async (e) => {
+        e.preventDefault();
+        const input = document.getElementById("passwordValue");
+        try {
+            await navigator.clipboard.writeText(input.value);
+            // console.log("Password copied to clipboard -" + input.value);
+            toast.success('Password copied to clipboard', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        } catch (err) {
+            toast.error('Failed to copy password', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        }
+    }
 
+    const handleRefresh = (e) => {
+        e.preventDefault();
+        passwordGenerator();
+    }
 
     useEffect(() => {
         passwordGenerator();
@@ -89,20 +128,21 @@ export default function PasswordGenerator() {
                         <hr className="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-4 dark:bg-gray-700" />
                         <form className="flex items-center w-4/5">
                             {/* <form className="flex items-center w-full"> */}
-                            <label htmlFor="simple-search" className="sr-only">Copy</label>
+                            {/* <label htmlFor="simple-search" className="sr-only">Copy</label> */}
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <RiLockPasswordLine />
                                 </div>
-                                <input type="text" id="simple-search" defaultValue={password} className="font-bold bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Generated password..." required />
+                                <input type="text" id="passwordValue" defaultValue={password} className="font-bold bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Generated password..." required />
                             </div>
-                            <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                                <span className="sr-only">Search</span>
-                            </button>
-                            {/* </form> */}
+                            <div className="inline-flex rounded-md shadow-sm ml-2" role="group">
+                                <button type="button" onClick={handleRefresh} title="Regenerate" className="px-4 py-2.5 text-sm font-medium text-gray-900 bg-indigo-400 border border-gray-200 rounded-s-lg hover:bg-indigo-300 hover:text-bslue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                    <FiRefreshCcw className='text-xl' />
+                                </button>
+                                <button type="button" onClick={handleCopy} title="Copy Password" className="px-4 py-1 text-sm font-medium text-gray-900 bg-green-400 border border-gray-200 rounded-e-lg hover:bg-green-300 hover:text-bluse-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                    <FaRegCopy className='text-xl' />
+                                </button>
+                            </div>
                         </form>
                         <div className="px-2 pb-5 text-center w-4/5">
                             <label htmlFor="default-range" className="block pt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Password Length - {valueSlider}</label>
@@ -118,16 +158,29 @@ export default function PasswordGenerator() {
                         </div>
                         <hr className="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-7 dark:bg-gray-700" />
                         <div>
-                            <img src="https://maxinov.com/wp-content/uploads/2023/04/maxinov_logo.webp" className="w-32 opacity-75" />
+                            <a href='/'>
+                                <FaHome className='text-2xl' />
+                            </a>
                         </div>
                         <div className="flex flex-row py-5">
-                            <a href="https://maxinov.com/"><i className="fa-solid fa-house pr-4 text-slate-500" title="Home"></i></a>
-                            <a href="https://twitter.com/maxinovs"><i className="fa-brands fa-x-twitter text-slate-500"></i></a>
-                            <a href="https://www.linkedin.com/company/maxinov-solutions"><i className="fa-brands fa-linkedin-in pl-4 text-slate-500"></i></a>
+
                         </div>
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition:Bounce
+            />
         </>
     )
 }
