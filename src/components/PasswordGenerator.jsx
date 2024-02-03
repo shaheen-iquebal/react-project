@@ -112,6 +112,7 @@ export default function PasswordGenerator() {
 
     useEffect(() => {
         passwordGenerator();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isNumberChecked, isSpecialChecked, valueSlider]);
 
     return (
